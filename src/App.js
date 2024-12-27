@@ -2,6 +2,16 @@ import React, { useEffect, useState } from 'react';
 import Navbar from './components/Navbar';
 import TextField from './components/TextField';
 
+function speakText(text) {
+  // Check if speech synthesis is supported
+  if ('speechSynthesis' in window) {
+      const utterance = new SpeechSynthesisUtterance(text);
+      speechSynthesis.speak(utterance);
+  } else {
+      console.log("Speech synthesis not supported in this browser.");
+  }
+}
+
 // Chatbot Component
 const Chatbot = () => {
   const [messages, setMessages] = useState([]);
@@ -26,10 +36,12 @@ const Chatbot = () => {
     const data = await response.json();
     setResponseData(data['output']);
     setMessages([...messages,data['output']]);
+    speakText(data['output'])
   }
 
   const handleSendMessage = (message) => {
       setMessages([...messages, message]);
+      // speakText(message);
     }
 
   useEffect(()=>{
